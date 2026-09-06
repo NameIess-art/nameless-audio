@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:doujin_audio/core/media/audio_detail.dart';
 import 'package:doujin_audio/core/widgets/search_highlight.dart';
 import 'package:doujin_audio/features/library/domain/audio_library_category.dart';
+import 'package:doujin_audio/features/library/presentation/library_tab.dart';
 
 void main() {
   group('SearchHighlightScope.withTerms', () {
@@ -131,6 +133,114 @@ void main() {
       );
       expect(bothActiveNoMatch, isEmpty);
     });
+  });
+
+  group('LibraryCategoryTermBox styling', () {
+    setUp(() {
+      SharedPreferences.setMockInitialValues(const <String, Object>{});
+    });
+
+    testWidgets(
+      'displays capsule style when collapsed and transitions to card style when expanded',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: LibraryCategoryTermBox(
+                categoryType: AudioLibraryCategoryType.tags,
+                collapseOnMount: true,
+                terms: const ['tag1', 'tag2'],
+                selectedTerms: const {},
+                emptyText: 'No tags',
+                clearLabel: 'Clear',
+                searchHintText: 'Search tags...',
+                searchQuery: '',
+                onSearchQueryChanged: (_) {},
+                onToggle: (_) {},
+                onClear: () {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        // Collapsed: Container has capsule border radius
+        final containerFinder = find.byType(AnimatedContainer);
+        expect(containerFinder, findsOneWidget);
+        final container = tester.widget<AnimatedContainer>(containerFinder);
+        final decoration = container.decoration as BoxDecoration;
+        expect(
+          decoration.borderRadius,
+          BorderRadius.circular(LibraryCategoryTermBox.capsuleRadius),
+        );
+
+        // AnimatedSize alignment is Alignment.topCenter (anchors search row to prevent flickering other rows)
+        final animatedSizeFinder = find.byType(AnimatedSize);
+        expect(animatedSizeFinder, findsOneWidget);
+        final animatedSize = tester.widget<AnimatedSize>(animatedSizeFinder);
+        expect(animatedSize.alignment, Alignment.topCenter);
+
+        // Collapsed: TextField has capsule border radius
+        final textFieldFinder = find.byType(TextField);
+        expect(textFieldFinder, findsOneWidget);
+        final textField = tester.widget<TextField>(textFieldFinder);
+        final border =
+            textField.decoration!.enabledBorder as OutlineInputBorder;
+        expect(border.borderRadius, BorderRadius.circular(999));
+
+        // Collapsed: ActionChip has StadiumBorder
+        final actionChipFinder = find.byType(ActionChip);
+        expect(actionChipFinder, findsOneWidget);
+        final actionChip = tester.widget<ActionChip>(actionChipFinder);
+        expect(actionChip.shape, const StadiumBorder());
+
+        // Tap ActionChip to expand
+        await tester.tap(actionChipFinder);
+        await tester.pumpAndSettle();
+
+        // Expanded: Container border radius matches capsule border radius
+        final expandedContainer = tester.widget<AnimatedContainer>(
+          containerFinder,
+        );
+        final expandedDecoration =
+            expandedContainer.decoration as BoxDecoration;
+        expect(
+          expandedDecoration.borderRadius,
+          BorderRadius.circular(LibraryCategoryTermBox.capsuleRadius),
+        );
+
+        // Expanded: TextField retains capsule border radius
+        final expandedTextField = tester.widget<TextField>(textFieldFinder);
+        final expandedBorder =
+            expandedTextField.decoration!.enabledBorder as OutlineInputBorder;
+        expect(expandedBorder.borderRadius, BorderRadius.circular(999));
+
+        // Expanded: ActionChip has StadiumBorder
+        final expandedActionChip = tester.widget<ActionChip>(actionChipFinder);
+        expect(expandedActionChip.shape, const StadiumBorder());
+
+        // Expanded: FilterChip elements have StadiumBorder (capsule style)
+        final filterChipFinder = find.byType(FilterChip);
+        expect(filterChipFinder, findsNWidgets(2));
+        final filterChip = tester.widget<FilterChip>(filterChipFinder.first);
+        expect(filterChip.shape, const StadiumBorder());
+
+        // Tap ActionChip to collapse again
+        await tester.tap(actionChipFinder);
+        await tester.pumpAndSettle();
+
+        // Back to capsule
+        final reCollapsedContainer = tester.widget<AnimatedContainer>(
+          containerFinder,
+        );
+        final reCollapsedDecoration =
+            reCollapsedContainer.decoration as BoxDecoration;
+        expect(
+          reCollapsedDecoration.borderRadius,
+          BorderRadius.circular(LibraryCategoryTermBox.capsuleRadius),
+        );
+      },
+    );
   });
 }
 

@@ -42,8 +42,6 @@ internal class NativePlaybackRestoreCoordinator(
         (StoredNativePlaybackSession) -> Boolean,
         (String) -> Unit
     ) -> List<String>,
-    private val resumePlaybackOnStartupRestore: () -> Boolean,
-    private val requestAudioFocus: () -> Boolean,
     private val startBootstrap: () -> NativePlaybackForegroundStartResult,
     private val resetRestoreState: () -> Unit,
     private val completeRestore: (List<String>, Boolean) -> Unit,
@@ -136,16 +134,10 @@ internal class NativePlaybackRestoreCoordinator(
             return
         }
         logInfo("sticky_restore_begin sessionCount=${storedSessions.size}")
-        val foregroundStart = startBootstrap()
+        startBootstrap()
         resetRestoreState()
         val restoredSessionIds = mutableListOf<String>()
-        val resumeRequested = resumePlaybackOnStartupRestore()
-        val shouldAutoPlay = foregroundStart.playbackAllowed &&
-            shouldAutoPlayWithAudioFocus(resumeRequested, requestAudioFocus)
-        if (resumeRequested && !foregroundStart.playbackAllowed)
-            logInfo("sticky_restore_auto_play_foreground_denied")
-        if (resumeRequested && foregroundStart.playbackAllowed && !shouldAutoPlay)
-            logInfo("sticky_restore_auto_play_focus_denied")
+        val shouldAutoPlay = false
 
         fun restoreNext(index: Int) {
             if (requestedGeneration != generation) return

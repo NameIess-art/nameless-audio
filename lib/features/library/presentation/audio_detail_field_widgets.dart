@@ -9,6 +9,7 @@ class _AudioDetailRow extends StatelessWidget {
     this.onTap,
     this.isCapsule = false,
     this.onCopy,
+    this.onDeleteValue,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class _AudioDetailRow extends StatelessWidget {
   final VoidCallback? onTap;
   final bool isCapsule;
   final void Function(String)? onCopy;
+  final void Function(String)? onDeleteValue;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +74,9 @@ class _AudioDetailRow extends StatelessWidget {
                       onCopy: onCopy != null && v != emptyText
                           ? () => onCopy!(v)
                           : null,
+                      onDelete: onDeleteValue != null && v != emptyText && !busy
+                          ? () => onDeleteValue!(v)
+                          : null,
                     ),
                   )
                   .toList(),
@@ -92,10 +97,11 @@ class _AudioDetailRow extends StatelessWidget {
 }
 
 class _DetailCapsule extends StatelessWidget {
-  const _DetailCapsule({required this.text, this.onCopy});
+  const _DetailCapsule({required this.text, this.onCopy, this.onDelete});
 
   final String text;
   final VoidCallback? onCopy;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +115,40 @@ class _DetailCapsule extends StatelessWidget {
             : null,
         borderRadius: BorderRadius.circular(999),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Text(
-            text,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+          padding: EdgeInsets.only(
+            left: 12,
+            top: onDelete != null ? 3 : 6,
+            bottom: onDelete != null ? 3 : 6,
+            right: onDelete != null ? 4 : 12,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                text,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+              ),
+              if (onDelete != null) ...[
+                const SizedBox(width: 4),
+                IconButton(
+                  iconSize: 14,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints.tightFor(
+                    width: 20,
+                    height: 20,
+                  ),
+                  tooltip:
+                      MaterialLocalizations.of(context).deleteButtonTooltip,
+                  icon: Icon(
+                    Icons.close_rounded,
+                    color: cs.onSurfaceVariant,
+                  ),
+                  onPressed: onDelete,
+                ),
+              ],
+            ],
           ),
         ),
       ),

@@ -173,10 +173,6 @@ void main() {
     );
     expect(find.text(i18n.tr('startup_page')), findsOneWidget);
     expect(find.text(i18n.tr('portrait_lock')), findsOneWidget);
-    expect(
-      find.text(i18n.tr('startup_playback_restore_behavior')),
-      findsOneWidget,
-    );
     expect(find.text(i18n.tr('allow_duplicate_works')), findsOneWidget);
     expect(find.text(i18n.tr('reduce_animations')), findsOneWidget);
     expect(
@@ -993,21 +989,21 @@ void main() {
     await tester.tap(find.text(i18n.tr('section_common')));
     await tester.pumpAndSettle();
 
-    final restoreTileFinder = find.widgetWithText(
+    final startupTileFinder = find.widgetWithText(
       ListTile,
-      i18n.tr('startup_playback_restore_behavior'),
+      i18n.tr('startup_page'),
     );
-    final restoreTile = tester.widget<ListTile>(restoreTileFinder);
-    final title = restoreTile.title! as Text;
+    final startupTile = tester.widget<ListTile>(startupTileFinder);
+    final title = startupTile.title! as Text;
     expect(title.softWrap, isTrue);
     expect(title.overflow, TextOverflow.visible);
-    expect(tester.getSize(restoreTileFinder).height, greaterThan(58));
+    expect(tester.getSize(startupTileFinder).height, greaterThan(58));
 
     final dropdownFinder = find.byType(
-      DropdownButton<StartupPlaybackRestoreBehavior>,
+      DropdownButton<StartupPage>,
     );
     final dropdown = tester
-        .widget<DropdownButton<StartupPlaybackRestoreBehavior>>(dropdownFinder);
+        .widget<DropdownButton<StartupPage>>(dropdownFinder);
     expect(dropdown.isExpanded, isTrue);
     expect(dropdown.itemHeight, isNull);
 
@@ -1075,7 +1071,7 @@ void main() {
             await tester.pumpAndSettle();
             final tile = find.widgetWithText(
               ListTile,
-              i18n.tr('startup_playback_restore_behavior'),
+              i18n.tr('startup_page'),
             );
             expect(tile, findsOneWidget);
             expect(tester.getSize(tile).height, greaterThanOrEqualTo(58));
@@ -1092,7 +1088,7 @@ void main() {
               );
               await tester.pumpAndSettle();
               final dropdown = find.byType(
-                DropdownButton<StartupPlaybackRestoreBehavior>,
+                DropdownButton<StartupPage>,
               );
               await tester.tap(dropdown);
               await tester.pumpAndSettle();
@@ -1103,11 +1099,11 @@ void main() {
                     'open menu width=$width language=${language.name} '
                     'scale=$scale',
               );
-              final pauseOption = find.text(
-                i18n.tr('startup_playback_restore_pause'),
+              final playlistOption = find.text(
+                i18n.tr('startup_page_playlist'),
               );
-              expect(pauseOption, findsWidgets);
-              await tester.tap(pauseOption.last);
+              expect(playlistOption, findsWidgets);
+              await tester.tap(playlistOption.last);
               await tester.pumpAndSettle();
             }
           }

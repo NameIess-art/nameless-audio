@@ -88,8 +88,6 @@ void main() {
               TransientAudioFocusLossBehavior.pause.name,
           'interruptionResumeBehavior':
               InterruptionResumeBehavior.stayPaused.name,
-          'startupPlaybackRestoreBehavior':
-              StartupPlaybackRestoreBehavior.pause.name,
           'allowDuplicateWorks': true,
           'reduceAnimations': true,
           'dlsiteMetadataLanguage': ContentLanguagePreference.en.name,
@@ -141,10 +139,6 @@ void main() {
         repository.interruptionResumeBehavior,
         InterruptionResumeBehavior.stayPaused,
       );
-      expect(
-        repository.startupPlaybackRestoreBehavior,
-        StartupPlaybackRestoreBehavior.pause,
-      );
       expect(repository.allowDuplicateWorks, isTrue);
       expect(repository.reduceAnimations, isTrue);
       expect(repository.librarySortCriterion, LibrarySortCriterion.duration);
@@ -188,7 +182,6 @@ void main() {
         ..transientAudioFocusLossBehavior =
             TransientAudioFocusLossBehavior.pause
         ..interruptionResumeBehavior = InterruptionResumeBehavior.stayPaused
-        ..startupPlaybackRestoreBehavior = StartupPlaybackRestoreBehavior.pause
         ..allowDuplicateWorks = true
         ..reduceAnimations = true
         ..maxCacheBytes = 500 * 1024 * 1024;
@@ -276,11 +269,6 @@ void main() {
               InterruptionResumeBehavior.stayPaused,
             )
             .having(
-              (state) => state.startupPlaybackRestoreBehavior,
-              'startup restore',
-              StartupPlaybackRestoreBehavior.pause,
-            )
-            .having(
               (state) => state.allowDuplicateWorks,
               'duplicate works',
               isTrue,
@@ -308,10 +296,6 @@ void main() {
       expect(
         state.interruptionResumeBehavior,
         InterruptionResumeBehavior.resume,
-      );
-      expect(
-        state.startupPlaybackRestoreBehavior,
-        StartupPlaybackRestoreBehavior.resume,
       );
       expect(state.allowDuplicateWorks, isFalse);
       expect(state.reduceAnimations, isFalse);

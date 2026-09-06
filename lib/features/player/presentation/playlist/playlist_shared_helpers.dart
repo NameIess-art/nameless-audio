@@ -58,9 +58,6 @@ UndoableRemovalKey playbackQueueEntryRemovalKey(
   String entryId,
 ) => UndoableRemovalKey('playback-queue-entry', '$sessionId:$entryId');
 
-UndoableRemovalKey timeSegmentRemovalKey(String labelId) =>
-    UndoableRemovalKey('time-segment', labelId);
-
 UndoableRemovalKey equalizerPresetRemovalKey(String presetId) =>
     UndoableRemovalKey('equalizer-preset', presetId);
 

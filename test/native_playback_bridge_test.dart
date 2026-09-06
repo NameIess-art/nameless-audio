@@ -97,7 +97,6 @@ void main() {
             'requestAudioFocus': false,
             'pauseOnTransientAudioFocusLoss': false,
             'resumeAfterTransientAudioFocusGain': true,
-            'resumePlaybackOnStartupRestore': false,
           });
           return <String, Object?>{'ok': true, 'value': null};
         });
@@ -107,7 +106,6 @@ void main() {
       requestAudioFocus: false,
       pauseOnTransientAudioFocusLoss: false,
       resumeAfterTransientAudioFocusGain: true,
-      resumePlaybackOnStartupRestore: false,
     );
 
     expect(result.isOk, isTrue);

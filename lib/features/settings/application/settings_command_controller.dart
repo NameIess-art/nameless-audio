@@ -104,14 +104,6 @@ final class SettingsCommandController {
     await syncNativePlaybackBehavior();
   }
 
-  Future<void> setStartupPlaybackRestoreBehavior(
-    StartupPlaybackRestoreBehavior behavior,
-  ) async {
-    if (_settings.startupPlaybackRestoreBehavior == behavior) return;
-    await _settings.setStartupPlaybackRestoreBehavior(behavior);
-    await syncNativePlaybackBehavior();
-  }
-
   Future<void> syncNativePlaybackBehavior() async {
     await _playback.nativeRepository.setPlaybackBehavior(
       pauseOnAudioDeviceDisconnect:
@@ -125,9 +117,6 @@ final class SettingsCommandController {
       resumeAfterTransientAudioFocusGain:
           _settings.interruptionResumeBehavior ==
           InterruptionResumeBehavior.resume,
-      resumePlaybackOnStartupRestore:
-          _settings.startupPlaybackRestoreBehavior ==
-          StartupPlaybackRestoreBehavior.resume,
     );
   }
 

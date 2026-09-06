@@ -156,7 +156,7 @@ String _targetDisplayName(AudioDetailTarget target) {
 }
 
 List<String> _splitMultiValue(String rawValue) {
-  return AudioDetail.normalizeList(rawValue.split(_multiValueSeparator));
+  return AudioDetail.normalizeList(rawValue.split(RegExp(r'[,，]')));
 }
 
 bool _looksLikeRjCode(String value) {

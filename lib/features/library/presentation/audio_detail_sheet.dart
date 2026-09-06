@@ -249,6 +249,20 @@ class _AudioDetailSheetState extends ConsumerState<AudioDetailSheet> {
     await _saveField(field, nextDetail);
   }
 
+  Future<void> _removeValueFromField(
+    _AudioDetailField field,
+    String valueToRemove,
+  ) async {
+    final detail = _detail;
+    if (detail == null || _savingField != null || _runningAction) return;
+    final currentList = field.readList(detail);
+    final updatedList = currentList.where((v) => v != valueToRemove).toList();
+    final nextDetail = field == _AudioDetailField.tags
+        ? detail.copyWith(tags: updatedList)
+        : detail.copyWith(voiceActors: updatedList);
+    await _saveField(field, nextDetail);
+  }
+
   Future<void> _renameTargetToName(
     AudioDetail detail,
     String targetName,
@@ -556,6 +570,9 @@ class _AudioDetailSheetState extends ConsumerState<AudioDetailSheet> {
                   onTap: () => _editField(field),
                   isCapsule: true,
                   onCopy: (val) => _copyText(context, val),
+                  onDeleteValue: field.isMulti
+                      ? (val) => _removeValueFromField(field, val)
+                      : null,
                 ),
               ),
               const SizedBox(height: 16),

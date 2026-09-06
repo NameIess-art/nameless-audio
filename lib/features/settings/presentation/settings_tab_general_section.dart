@@ -175,44 +175,6 @@ List<Widget> _buildSettingsGeneralSection({
             );
           },
         ),
-        Consumer(
-          builder: (context, ref, _) {
-            final behavior = ref.watch(
-              settingsStateProvider.select(
-                (state) =>
-                    state.value?.startupPlaybackRestoreBehavior ??
-                    StartupPlaybackRestoreBehavior.resume,
-              ),
-            );
-            return ListTile(
-              title: _settingsTitle(
-                i18n.tr('startup_playback_restore_behavior'),
-              ),
-              leading: _settingsIcon(Icons.restore_rounded, cs.onSurface),
-              trailing: _settingsDropdown<StartupPlaybackRestoreBehavior>(
-                context,
-                value: behavior,
-                onChanged: (value) {
-                  if (value != null) {
-                    settingsController.setStartupPlaybackRestoreBehavior(value);
-                  }
-                },
-                items: StartupPlaybackRestoreBehavior.values
-                    .map(
-                      (value) =>
-                          DropdownMenuItem<StartupPlaybackRestoreBehavior>(
-                            value: value,
-                            child: _settingsDropdownText(
-                              i18n.tr('startup_playback_restore_${value.name}'),
-                            ),
-                          ),
-                    )
-                    .toList(),
-              ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            );
-          },
-        ),
       ],
     ),
     _SettingsSectionCard(

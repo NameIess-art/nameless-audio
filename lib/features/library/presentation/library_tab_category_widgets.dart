@@ -218,6 +218,9 @@ extension _LibrarySearchPageCategoryView on _LibrarySearchPageState {
             itemBuilder: (context, index) {
               if (hasTermBox && index == 0) {
                 return _LibraryCategoryTermBox(
+                  key: ValueKey(
+                    'library_category_term_box_${_categoryType.name}',
+                  ),
                   categoryType: _categoryType,
                   collapseOnMount: _hasSwitchedCategory,
                   terms: terms,
@@ -305,8 +308,12 @@ extension _LibrarySearchPageCategoryView on _LibrarySearchPageState {
   }
 }
 
-class _LibraryCategoryTermBox extends StatefulWidget {
-  const _LibraryCategoryTermBox({
+@visibleForTesting
+class LibraryCategoryTermBox extends StatefulWidget {
+  static const double capsuleRadius = 20.0;
+
+  const LibraryCategoryTermBox({
+    super.key,
     required this.categoryType,
     required this.collapseOnMount,
     required this.terms,
@@ -333,11 +340,13 @@ class _LibraryCategoryTermBox extends StatefulWidget {
   final ValueChanged<String> onSearchQueryChanged;
 
   @override
-  State<_LibraryCategoryTermBox> createState() =>
+  State<LibraryCategoryTermBox> createState() =>
       _LibraryCategoryTermBoxState();
 }
 
-class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
+typedef _LibraryCategoryTermBox = LibraryCategoryTermBox;
+
+class _LibraryCategoryTermBoxState extends State<LibraryCategoryTermBox> {
   static const _searchDebounce = Duration(milliseconds: 180);
   bool _expanded = false;
   bool _wasExpandedBeforeSearch = false;
@@ -396,7 +405,7 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
   }
 
   @override
-  void didUpdateWidget(covariant _LibraryCategoryTermBox oldWidget) {
+  void didUpdateWidget(covariant LibraryCategoryTermBox oldWidget) {
     super.didUpdateWidget(oldWidget);
     final categoryChanged = oldWidget.categoryType != widget.categoryType;
     if (categoryChanged) {
@@ -435,12 +444,23 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Container(
+    final motionStandard = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : kAppMotionStandard;
+    return AnimatedContainer(
+      duration: motionStandard,
+      curve: Curves.easeOutCubic,
       margin: const EdgeInsets.only(bottom: 4),
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: EdgeInsets.fromLTRB(
+        _expanded ? 10 : 12,
+        5,
+        _expanded ? 10 : 12,
+        5,
+      ),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: cs.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(LibraryCategoryTermBox.capsuleRadius),
         border: Border.all(color: cs.outlineVariant),
       ),
       child: widget.terms.isEmpty && _localSearchQuery.isEmpty
@@ -452,9 +472,7 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
               ),
             )
           : AnimatedSize(
-              duration: MediaQuery.disableAnimationsOf(context)
-                  ? Duration.zero
-                  : kAppMotionStandard,
+              duration: motionStandard,
               curve: Curves.easeOutCubic,
               alignment: Alignment.topCenter,
               child: Column(
@@ -488,7 +506,7 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
                                     fontWeight: FontWeight.w600,
                                   ),
                               contentPadding: const EdgeInsets.only(
-                                left: 10,
+                                left: 12,
                                 bottom: 14,
                               ),
                               filled: true,
@@ -510,13 +528,13 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
                                 minHeight: 28,
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(999),
                                 borderSide: BorderSide(
                                   color: cs.outlineVariant,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(999),
                                 borderSide: BorderSide(color: cs.primary),
                               ),
                             ),
@@ -528,6 +546,7 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
                         SizedBox(
                           height: 28,
                           child: ActionChip(
+                            shape: const StadiumBorder(),
                             label: Padding(
                               padding: const EdgeInsets.only(bottom: 2),
                               child: Row(
@@ -561,6 +580,7 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
                       SizedBox(
                         height: 28,
                         child: ActionChip(
+                          shape: const StadiumBorder(),
                           label: Padding(
                             padding: const EdgeInsets.only(bottom: 2),
                             child: Row(
@@ -617,6 +637,7 @@ class _LibraryCategoryTermBoxState extends State<_LibraryCategoryTermBox> {
                               child: SizedBox(
                                 height: 28,
                                 child: FilterChip(
+                                  shape: const StadiumBorder(),
                                   selected: selected,
                                   label: Padding(
                                     padding: const EdgeInsets.only(bottom: 2),

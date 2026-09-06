@@ -300,10 +300,6 @@ class NativePlaybackService : MediaSessionService() {
             restoreSessions = { storedSessions, autoPlay, onRestored ->
                 sessionRestorer.restore(storedSessions, autoPlay, onRestored)
             },
-            resumePlaybackOnStartupRestore = {
-                playbackBehavior.resumePlaybackOnStartupRestore
-            },
-            requestAudioFocus = { focusRecovery.requestIfNeeded() },
             startBootstrap = foregroundCoordinator::startBootstrap,
             resetRestoreState = {
                 notificationsDismissed = false
@@ -1188,16 +1184,14 @@ class NativePlaybackService : MediaSessionService() {
         pauseOnAudioDeviceDisconnect: Boolean,
         requestAudioFocus: Boolean,
         pauseOnTransientAudioFocusLoss: Boolean,
-        resumeAfterTransientAudioFocusGain: Boolean,
-        resumePlaybackOnStartupRestore: Boolean
+        resumeAfterTransientAudioFocusGain: Boolean
     ): Map<String, Any?> {
         val previouslyRequestedAudioFocus = playbackBehavior.requestAudioFocus
         playbackBehavior = StoredPlaybackBehavior(
             pauseOnAudioDeviceDisconnect = pauseOnAudioDeviceDisconnect,
             requestAudioFocus = requestAudioFocus,
             pauseOnTransientAudioFocusLoss = pauseOnTransientAudioFocusLoss,
-            resumeAfterTransientAudioFocusGain = resumeAfterTransientAudioFocusGain,
-            resumePlaybackOnStartupRestore = resumePlaybackOnStartupRestore
+            resumeAfterTransientAudioFocusGain = resumeAfterTransientAudioFocusGain
         )
         NativePlaybackStateStore.savePlaybackBehavior(this, playbackBehavior)
         if (!requestAudioFocus) {

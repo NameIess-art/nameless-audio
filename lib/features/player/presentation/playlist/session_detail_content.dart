@@ -13,7 +13,6 @@ import '../../../../core/media/natural_sort.dart';
 import '../../../../core/media/path_display.dart';
 import '../../../../core/media/path_matcher.dart';
 import '../../../../core/media/time_text_formatters.dart';
-import '../../../../core/ui/undoable_removal_service.dart';
 import '../../../../core/widgets/app_bottom_sheet.dart';
 import '../../../../core/widgets/app_feedback.dart';
 import '../../../../core/widgets/app_transitions.dart';
@@ -402,39 +401,31 @@ class SessionDetailContentState extends ConsumerState<SessionDetailContent> {
         .where((label) => label.id == _selectedSegmentId)
         .firstOrNull;
     if (selected == null) return;
-    final service = ref.read(undoableRemovalServiceProvider);
-    final staged = await service.stage(
-      UndoableRemovalAction(
-        key: timeSegmentRemovalKey(selected.id),
-        undo: () {},
-        commit: () async {
-          await _timeSegments.deleteLabel(selected.id);
-          if (!mounted) return;
-          setState(() {
-            _segmentLabels = _segmentLabels
-                .where((label) => label.id != selected.id)
-                .toList(growable: false);
-          });
-        },
-      ),
+    _segmentNameDebounce?.cancel();
+    _segmentSaveQueued = false;
+    await _timeSegments.deleteLabel(selected.id);
+    if (!mounted) return;
+    setState(() {
+      _segmentLabels = _segmentLabels
+          .where((label) => label.id != selected.id)
+          .toList(growable: false);
+      _clearSegmentDraft();
+    });
+    final i18n = ProviderScope.containerOf(
+      context,
+      listen: false,
+    ).read(appLanguageProviderInstanceProvider);
+    showAppSnackBar(
+      context,
+      i18n.tr('items_removed_count', {'count': 1}),
+      tone: AppFeedbackTone.destructive,
+      icon: Icons.sell_rounded,
     );
-    if (!staged) return;
-    if (!mounted) {
-      await service.commitPending();
-      return;
-    }
-    setState(_clearSegmentDraft);
-    showPlaybackRemovalFeedback(context, service, icon: Icons.sell_rounded);
   }
 
   @override
   Widget build(BuildContext context) {
-    final removalState = ref.watch(undoableRemovalStateProvider);
-    final visibleSegmentLabels = _segmentLabels
-        .where(
-          (label) => !removalState.isHidden(timeSegmentRemovalKey(label.id)),
-        )
-        .toList(growable: false);
+    final visibleSegmentLabels = _segmentLabels;
     final cs = Theme.of(context).colorScheme;
     final session = widget.session;
     final playback = _playback;

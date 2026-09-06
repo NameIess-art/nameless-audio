@@ -80,8 +80,7 @@ class NativePlaybackCommandPayloadsTest {
                     "pauseOnAudioDeviceDisconnect" to true,
                     "requestAudioFocus" to false,
                     "pauseOnTransientAudioFocusLoss" to false,
-                    "resumeAfterTransientAudioFocusGain" to true,
-                    "resumePlaybackOnStartupRestore" to false
+                    "resumeAfterTransientAudioFocusGain" to true
                 )
             )
         )

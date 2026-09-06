@@ -136,6 +136,30 @@ void main() {
     expect(result.documentFailed, isTrue);
     expect((await database.load(target))?.workTitle, 'Database wins');
   });
+
+  test('import does not restore tags when user record cleared tags', () async {
+    const originalWithTags = '''{
+  "schemaVersion": 1,
+  "type": "audio-detail",
+  "targetType": "library-root-folder",
+  "workTitle": "Work",
+  "tags": ["TagA", "TagB"],
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}''';
+    await documentFile.writeAsString(originalWithTags, flush: true);
+    await database.upsert(
+      AudioDetail.empty(target).copyWith(
+        workTitle: 'Work',
+        tags: const <String>[],
+        updatedAt: DateTime.parse('2024-01-02T00:00:00.000Z'),
+      ),
+    );
+
+    final result = await repository.importBackupsMany(<AudioDetailTarget>[target]);
+    expect(result.importedCount, 1);
+    final loaded = await database.load(target);
+    expect(loaded?.tags, isEmpty);
+  });
 }
 
 final class _MemoryAudioDetailStore implements AudioDetailStore {

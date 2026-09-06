@@ -76,14 +76,8 @@ final class AppPersistenceCoordinator implements PersistedStateReloader {
         resumeAfterTransientAudioFocusGain:
             _settings.interruptionResumeBehavior ==
             InterruptionResumeBehavior.resume,
-        resumePlaybackOnStartupRestore:
-            _settings.startupPlaybackRestoreBehavior ==
-            StartupPlaybackRestoreBehavior.resume,
       );
-      if (_settings.startupPlaybackRestoreBehavior ==
-          StartupPlaybackRestoreBehavior.pause) {
-        await _playback.nativeRepository.pauseAll();
-      }
+      await _playback.nativeRepository.pauseAll();
 
       await Future.wait<void>(<Future<void>>[
         _library.coverArtworkCacheService.initialize(),

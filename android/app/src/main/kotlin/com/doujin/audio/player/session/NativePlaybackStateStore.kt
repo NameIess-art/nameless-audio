@@ -92,8 +92,7 @@ data class StoredPlaybackBehavior(
     val pauseOnAudioDeviceDisconnect: Boolean = true,
     val requestAudioFocus: Boolean = true,
     val pauseOnTransientAudioFocusLoss: Boolean = false,
-    val resumeAfterTransientAudioFocusGain: Boolean = true,
-    val resumePlaybackOnStartupRestore: Boolean = true
+    val resumeAfterTransientAudioFocusGain: Boolean = true
 )
 
 object NativePlaybackStateStore {
@@ -123,7 +122,6 @@ object NativePlaybackStateStore {
                 "resumeAfterTransientAudioFocusGain",
                 behavior.resumeAfterTransientAudioFocusGain
             )
-            .put("resumePlaybackOnStartupRestore", behavior.resumePlaybackOnStartupRestore)
         context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
             .edit()
             .putString(keyPlaybackBehavior, encoded.toString())
@@ -143,9 +141,7 @@ object NativePlaybackStateStore {
                 pauseOnTransientAudioFocusLoss =
                     json.optBoolean("pauseOnTransientAudioFocusLoss", false),
                 resumeAfterTransientAudioFocusGain =
-                    json.optBoolean("resumeAfterTransientAudioFocusGain", true),
-                resumePlaybackOnStartupRestore =
-                    json.optBoolean("resumePlaybackOnStartupRestore", true)
+                    json.optBoolean("resumeAfterTransientAudioFocusGain", true)
             )
         } catch (_: Exception) {
             StoredPlaybackBehavior()

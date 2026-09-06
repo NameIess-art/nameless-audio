@@ -21,8 +21,6 @@ enum TransientAudioFocusLossBehavior { duck, pause }
 
 enum InterruptionResumeBehavior { stayPaused, resume }
 
-enum StartupPlaybackRestoreBehavior { resume, pause }
-
 enum SleepModeAutoTrigger {
   manual,
   afterPlayback5min,
@@ -95,7 +93,6 @@ class SettingsState {
     this.audioFocusStrategy = AudioFocusStrategy.standard,
     this.transientAudioFocusLossBehavior = TransientAudioFocusLossBehavior.duck,
     this.interruptionResumeBehavior = InterruptionResumeBehavior.resume,
-    this.startupPlaybackRestoreBehavior = StartupPlaybackRestoreBehavior.resume,
     this.sleepModeAutoTrigger = SleepModeAutoTrigger.manual,
     this.allowDuplicateWorks = false,
     this.reduceAnimations = false,
@@ -153,7 +150,6 @@ class SettingsState {
   final AudioFocusStrategy audioFocusStrategy;
   final TransientAudioFocusLossBehavior transientAudioFocusLossBehavior;
   final InterruptionResumeBehavior interruptionResumeBehavior;
-  final StartupPlaybackRestoreBehavior startupPlaybackRestoreBehavior;
   final SleepModeAutoTrigger sleepModeAutoTrigger;
   final bool allowDuplicateWorks;
   final bool reduceAnimations;
@@ -217,8 +213,6 @@ class SettingsState {
         other.transientAudioFocusLossBehavior ==
             transientAudioFocusLossBehavior &&
         other.interruptionResumeBehavior == interruptionResumeBehavior &&
-        other.startupPlaybackRestoreBehavior ==
-            startupPlaybackRestoreBehavior &&
         other.sleepModeAutoTrigger == sleepModeAutoTrigger &&
         other.allowDuplicateWorks == allowDuplicateWorks &&
         other.reduceAnimations == reduceAnimations &&
@@ -272,7 +266,6 @@ class SettingsState {
     audioFocusStrategy,
     transientAudioFocusLossBehavior,
     interruptionResumeBehavior,
-    startupPlaybackRestoreBehavior,
     sleepModeAutoTrigger,
     allowDuplicateWorks,
     reduceAnimations,

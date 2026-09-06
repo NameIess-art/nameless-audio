@@ -230,10 +230,8 @@ class AudioDetailRepository {
       rjCode: _nonEmpty(user.rjCode, secondary.rjCode),
       workTitle: _nonEmpty(user.workTitle, secondary.workTitle),
       circleName: _nonEmpty(user.circleName, secondary.circleName),
-      voiceActors: user.voiceActors.isNotEmpty
-          ? user.voiceActors
-          : secondary.voiceActors,
-      tags: user.tags.isNotEmpty ? user.tags : secondary.tags,
+      voiceActors: user.voiceActors,
+      tags: user.tags,
       cardCoverPath: database.cardCoverPath ?? file.cardCoverPath,
       cardCoverSelected: database.cardCoverPath != null
           ? database.cardCoverSelected

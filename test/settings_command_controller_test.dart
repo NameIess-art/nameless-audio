@@ -266,7 +266,6 @@ final class _CapturingPlaybackBehaviorRepository
     required bool requestAudioFocus,
     required bool pauseOnTransientAudioFocusLoss,
     required bool resumeAfterTransientAudioFocusGain,
-    required bool resumePlaybackOnStartupRestore,
   }) async {
     this.requestAudioFocus = requestAudioFocus;
     return const NativeSuccess<void>();

@@ -165,14 +165,12 @@ class NativePlaybackRepository {
     required bool requestAudioFocus,
     required bool pauseOnTransientAudioFocusLoss,
     required bool resumeAfterTransientAudioFocusGain,
-    required bool resumePlaybackOnStartupRestore,
   }) {
     return _bridge.setPlaybackBehavior(
       pauseOnAudioDeviceDisconnect: pauseOnAudioDeviceDisconnect,
       requestAudioFocus: requestAudioFocus,
       pauseOnTransientAudioFocusLoss: pauseOnTransientAudioFocusLoss,
       resumeAfterTransientAudioFocusGain: resumeAfterTransientAudioFocusGain,
-      resumePlaybackOnStartupRestore: resumePlaybackOnStartupRestore,
     );
   }
 

@@ -68,8 +68,6 @@ class SettingsRepository {
       TransientAudioFocusLossBehavior.duck;
   InterruptionResumeBehavior interruptionResumeBehavior =
       InterruptionResumeBehavior.resume;
-  StartupPlaybackRestoreBehavior startupPlaybackRestoreBehavior =
-      StartupPlaybackRestoreBehavior.resume;
   SleepModeAutoTrigger sleepModeAutoTrigger = SleepModeAutoTrigger.manual;
   bool allowDuplicateWorks = false;
   bool reduceAnimations = false;
@@ -171,11 +169,6 @@ class SettingsRepository {
         (value) => value.name == playback['interruptionResumeBehavior'],
         orElse: () => InterruptionResumeBehavior.resume,
       );
-      startupPlaybackRestoreBehavior = StartupPlaybackRestoreBehavior.values
-          .firstWhere(
-            (value) => value.name == playback['startupPlaybackRestoreBehavior'],
-            orElse: () => StartupPlaybackRestoreBehavior.resume,
-          );
       sleepModeAutoTrigger = SleepModeAutoTrigger.values.firstWhere(
         (value) => value.name == playback['sleepModeAutoTrigger'],
         orElse: () => SleepModeAutoTrigger.manual,
@@ -297,7 +290,6 @@ class SettingsRepository {
       'audioFocusStrategy': audioFocusStrategy.name,
       'transientAudioFocusLossBehavior': transientAudioFocusLossBehavior.name,
       'interruptionResumeBehavior': interruptionResumeBehavior.name,
-      'startupPlaybackRestoreBehavior': startupPlaybackRestoreBehavior.name,
       'allowDuplicateWorks': allowDuplicateWorks,
       'reduceAnimations': reduceAnimations,
       'sleepModeAutoTrigger': sleepModeAutoTrigger.name,
@@ -696,12 +688,6 @@ class SettingsRepository {
     update: () => interruptionResumeBehavior = behavior,
   );
 
-  Future<void> setStartupPlaybackRestoreBehavior(
-    StartupPlaybackRestoreBehavior behavior,
-  ) => _setValue(
-    unchanged: startupPlaybackRestoreBehavior == behavior,
-    update: () => startupPlaybackRestoreBehavior = behavior,
-  );
 
   Future<void> setAllowDuplicateWorks(bool enabled) => _setValue(
     unchanged: allowDuplicateWorks == enabled,
@@ -776,7 +762,6 @@ class SettingsRepository {
     audioFocusStrategy = AudioFocusStrategy.standard;
     transientAudioFocusLossBehavior = TransientAudioFocusLossBehavior.duck;
     interruptionResumeBehavior = InterruptionResumeBehavior.resume;
-    startupPlaybackRestoreBehavior = StartupPlaybackRestoreBehavior.resume;
     allowDuplicateWorks = false;
     reduceAnimations = false;
     sleepModeAutoTrigger = SleepModeAutoTrigger.manual;
@@ -848,7 +833,6 @@ class SettingsRepository {
         audioFocusStrategy: audioFocusStrategy,
         transientAudioFocusLossBehavior: transientAudioFocusLossBehavior,
         interruptionResumeBehavior: interruptionResumeBehavior,
-        startupPlaybackRestoreBehavior: startupPlaybackRestoreBehavior,
         allowDuplicateWorks: allowDuplicateWorks,
         reduceAnimations: reduceAnimations,
         sleepModeAutoTrigger: sleepModeAutoTrigger,

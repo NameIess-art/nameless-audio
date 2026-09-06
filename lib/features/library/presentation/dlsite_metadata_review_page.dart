@@ -220,9 +220,11 @@ class _DlsiteMetadataReviewPageState
       workTitle: _titleController.text.trim(),
       circleName: _circleController.text.trim(),
       voiceActors: AudioDetail.normalizeList(
-        _voiceActorsController.text.split('\uFF0C'),
+        _voiceActorsController.text.split(RegExp(r'[,，]')),
       ),
-      tags: AudioDetail.normalizeList(_tagsController.text.split('\uFF0C')),
+      tags: AudioDetail.normalizeList(
+        _tagsController.text.split(RegExp(r'[,，]')),
+      ),
       releaseDate: parseDateYmd(_releaseDateController.text.trim()),
       duration: parseDurationCompact(_durationController.text.trim()),
       salesCount: _salesController.text.trim().isEmpty

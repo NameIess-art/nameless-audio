@@ -115,12 +115,11 @@ class NativePlaybackRestoreCoordinatorTest {
     }
 
     @Test
-    fun `foreground bootstrap failure restores snapshot without autoplay or focus`() {
+    fun `restore after service restart restores snapshot without autoplay`() {
         val environment = FakeRestoreEnvironment().apply {
             sessions = listOf(storedSession("player"))
         }
         val autoPlayValues = mutableListOf<Boolean>()
-        var focusRequests = 0
         val coordinator = coordinator(
             environment = environment,
             restore = { stored, autoPlay, _ ->
@@ -129,18 +128,13 @@ class NativePlaybackRestoreCoordinatorTest {
                     session.sessionId
                 }
             },
-            requestAudioFocus = {
-                focusRequests += 1
-                true
-            },
-            startBootstrap = { NativePlaybackForegroundStartResult.FAILED }
+            startBootstrap = { NativePlaybackForegroundStartResult.STARTED }
         )
 
         coordinator.restoreAfterServiceRestart(startId = 1)
         environment.runAll()
 
         assertEquals(listOf(false), autoPlayValues)
-        assertEquals(0, focusRequests)
     }
 
     private fun coordinator(
@@ -157,15 +151,12 @@ class NativePlaybackRestoreCoordinatorTest {
         completeRestore: (List<String>, Boolean) -> Unit = { _, _ -> },
         onMissingSessionsRestored: (List<String>) -> Unit = {},
         onNotificationSessionRestored: (String) -> Unit = {},
-        requestAudioFocus: () -> Boolean = { true },
         startBootstrap: () -> NativePlaybackForegroundStartResult = {
             NativePlaybackForegroundStartResult.STARTED
         }
     ) = NativePlaybackRestoreCoordinator(
         environment = environment,
         restoreSessions = restore,
-        resumePlaybackOnStartupRestore = { true },
-        requestAudioFocus = requestAudioFocus,
         startBootstrap = startBootstrap,
         resetRestoreState = {},
         completeRestore = completeRestore,

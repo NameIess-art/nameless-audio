@@ -121,9 +121,7 @@ class NativePlaybackBridge(
                         pauseOnTransientAudioFocusLoss =
                             reader.requiredBoolean("pauseOnTransientAudioFocusLoss"),
                         resumeAfterTransientAudioFocusGain =
-                            reader.requiredBoolean("resumeAfterTransientAudioFocusGain"),
-                        resumePlaybackOnStartupRestore =
-                            reader.requiredBoolean("resumePlaybackOnStartupRestore")
+                            reader.requiredBoolean("resumeAfterTransientAudioFocusGain")
                     )
                 }
                 NativePlaybackMethods.DISMISS_NOTIFICATIONS -> service.dismissNotifications()
@@ -354,7 +352,6 @@ internal fun validatePlaybackArgumentsBeforeService(call: MethodCall) {
             arguments.requiredBoolean("requestAudioFocus")
             arguments.requiredBoolean("pauseOnTransientAudioFocusLoss")
             arguments.requiredBoolean("resumeAfterTransientAudioFocusGain")
-            arguments.requiredBoolean("resumePlaybackOnStartupRestore")
         }
     }
 }
